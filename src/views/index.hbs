@@ -1,15 +1,3 @@
-<form action="/tasks/add" method="POST">
+{{>tasks/taskForm}}
 
-<div>
-    <label for="title">Type a title: </label>
-    <input type="text" name="title" placeholder="title">
-</div>
-
-<div>
-    <label for="description">Description</label>
-    <textarea name="description" placeholder="description"></textarea>
-</div>
-
-<button>Add</button>
-
-</form>
+{{>tasks/taskTable}}
