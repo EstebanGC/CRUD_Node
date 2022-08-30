@@ -1,74 +1,26 @@
 import {Router} from 'express';
-import Task from '../models/Task'
+
+import { 
+    renderTasks, 
+    createTask, 
+    renderEditTask, 
+    deleteTask, editTask, 
+    taskToggleDone
+} from '../controllers/tasks.controller';
+
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', renderTasks);
 
-    const tasks = await Task.find().lean()
+router.post('/tasks/add', createTask);
 
-    console.log(tasks)
+router.get('/tasks/:id/edit', renderEditTask);
 
-    res.render('index', { tasks: tasks});
-});
+router.post('/tasks/:id/edit', editTask);
 
-router.post('/tasks/add', async (req, res) => {
+router.get('/tasks/:id/delete', deleteTask);
 
-    try {
-        const task = Task(req.body)
-
-        await task.save();
-
-        res.redirect("/");
-
-    } catch(error) {
-        console.log(error)
-    }
-});
-
-router.get('/about', (req, res) => {
-
-    // await Task.findById()
-    res.render("about");
-})
-
-router.get('/edit/:id', async (req, res) => {
-    try {
-        const task = await Task.findById(req.params.id).lean()
-        res.render("edit", {task});
-    } catch (error) {
-        console.log(error.message);
-    }
-});
-
-router.post('/edit/:id', async (req, res) => {
-
-    const {id} = req.params 
-
-    await Task.findByIdAndUpdate(id, req.body )
-
-    res.redirect("/");
-})
-
-
-router.get('/delete/:id', async(req, res) => {
-    const {id} = req.params;
-
-    await Task.findByIdAndDelete(id);
-
-    res.redirect("/");
-})
-
-router.get('/toggleDone/:id', async(req,res) => {
-    const {id} = req.params;
-
-    const task =  await Task.findById(id)
-
-    task.done = !task.done;
-    
-    await task.save();
-
-    res.redirect('/');
-})
+router.get('/tasks/:id/toggleDone', taskToggleDone);
 
 export default router;
